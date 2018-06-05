@@ -1,9 +1,9 @@
-*** testlib-0.9.5.h	2013-10-24 14:02:38.000000000 +0300
---- testlib-0.9.5-patched.h	2018-06-05 15:48:09.000000000 +0300
+*** testlib.h.orig	2018-06-05 13:59:32.000000000 +0300
+--- testlib.h	2018-06-05 21:25:42.767738939 +0300
 ***************
 *** 36,51 ****
---- 36,59 ----
-   * Permission to use or copy this software for any purpose is hereby granted 
+--- 36,66 ----
+   * Permission to use or copy this software for any purpose is hereby granted
    * without fee, provided the above notices are retained on all copies.
    * Permission to modify the code and to distribute modified code is granted,
    * provided the above notices are retained, and a notice that the code was
@@ -19,17 +19,24 @@
 +  * "message" to stderr.
 +  */
 + 
++ /*
++  * Alexander Kernozhitsky
++  *
++  * Ported patch from CMS to the new version.
++  *
++  */
++ 
   /* NOTE: This file contains testlib library for C++.
    *
    *   Check, using testlib running format:
    *     check.exe <Input_File> <Output_File> <Answer_File> [<Result_File> [-appes]],
    *   If result file is specified it will contain results.
    *
-   *   Validator, using testlib running format:                                          
+   *   Validator, using testlib running format:
    *     validator.exe < input.txt,
 ***************
-*** 1892,1907 ****
---- 1900,1951 ----
+*** 2411,2426 ****
+--- 2426,2474 ----
       {
           if (testlibMode != _interactor && !ouf.seekEof())
               quit(_dirt, "Extra information in the output file");
@@ -38,12 +45,9 @@
       int pctype = result - _partially;
       bool isPartial = false;
   
-+     if (inf.file)
-+         fclose(inf.file);
-+     if (ouf.file)
-+         fclose(ouf.file);
-+     if (ans.file)
-+         fclose(ans.file);
++     inf.close();
++     ouf.close();
++     ans.close();
 +     if (tout.is_open())
 +         tout.close();
 + 
@@ -83,7 +87,7 @@
       case _wa:
           errorName = "wrong answer ";
 ***************
-*** 3084,3101 ****
+*** 4024,4041 ****
           else
           {
               resultName = argv[4];
@@ -102,7 +106,7 @@
           quit(_fail, std::string("Program must be run with the following arguments: ") +
               "<input-file> <output-file> <answer-file> [<report-file> [<-appes>]]");
   
---- 3128,3145 ----
+--- 4072,4089 ----
           else
           {
               resultName = argv[4];
