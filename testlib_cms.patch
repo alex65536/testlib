@@ -1,0 +1,52 @@
+43a44,51
+> /*
+>  * Artem Iglikov
+>  *
+>  * This software has been modified to make it possible to use it with CMS. More
+>  * precisely, at termination it now output the "outcome" to stdout and the
+>  * "message" to stderr.
+>  */
+> 
+1899a1908,1943
+>     if (inf.file)
+>         fclose(inf.file);
+>     if (ouf.file)
+>         fclose(ouf.file);
+>     if (ans.file)
+>         fclose(ans.file);
+>     if (tout.is_open())
+>         tout.close();
+> 
+>     if (result == _ok) {
+>       std::fprintf(stdout, "1.0\n");
+>       std::fprintf(stderr, "OK\n");
+>     } else if (result == _wa) {
+>       std::fprintf(stdout, "0.0\n");
+>       std::fprintf(stderr, "Wrong Answer\n");
+>     } else if (result == _pe) {
+>       std::fprintf(stdout, "0.0\n");
+>       std::fprintf(stderr, "Presentation Error\n");
+>     } else if (result == _dirt) {
+>       std::fprintf(stdout, "0.0\n");
+>       std::fprintf(stderr, "Wrong Output Format\n");
+>     } else if (result == _unexpected_eof) {
+>       std::fprintf(stdout, "0.0\n");
+>       std::fprintf(stderr, "Wrong Output Format\n");
+>     } else if (result == _fail) {
+>       std::fprintf(stdout, "0.0\n");
+>       std::fprintf(stderr, "FAILURE, CONTACT JURY, ERROR 1\n");
+>       halt(1);
+>     } else {
+>       std::fprintf(stdout, "0.0\n");
+>       std::fprintf(stderr, "FAILURE, CONTACT JURY, ERROR 2 %d\n", result);
+>       halt(1);
+>     }
+> 
+>     halt(0);
+> 
+3092,3093c3136,3137
+<     ouf.init(argv[2], _output);
+<     ans.init(argv[3], _answer);
+---
+>     ouf.init(argv[3], _output);
+>     ans.init(argv[2], _answer);
