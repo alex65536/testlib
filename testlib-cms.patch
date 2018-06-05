@@ -1,8 +1,8 @@
 *** testlib.h.orig	2018-06-05 13:59:32.000000000 +0300
---- testlib.h	2018-06-05 21:25:42.767738939 +0300
+--- testlib.h	2018-06-05 21:39:30.164081688 +0300
 ***************
 *** 36,51 ****
---- 36,66 ----
+--- 36,67 ----
    * Permission to use or copy this software for any purpose is hereby granted
    * without fee, provided the above notices are retained on all copies.
    * Permission to modify the code and to distribute modified code is granted,
@@ -23,6 +23,7 @@
 +  * Alexander Kernozhitsky
 +  *
 +  * Ported patch from CMS to the new version.
++  * Also added conditional compilation for CMS checker outcome format (with #ifdef CMS)
 +  *
 +  */
 + 
@@ -36,7 +37,7 @@
    *     validator.exe < input.txt,
 ***************
 *** 2411,2426 ****
---- 2426,2474 ----
+--- 2427,2477 ----
       {
           if (testlibMode != _interactor && !ouf.seekEof())
               quit(_dirt, "Extra information in the output file");
@@ -45,38 +46,40 @@
       int pctype = result - _partially;
       bool isPartial = false;
   
-+     inf.close();
-+     ouf.close();
-+     ans.close();
-+     if (tout.is_open())
-+         tout.close();
++     #ifdef CMS
++         inf.close();
++         ouf.close();
++         ans.close();
++         if (tout.is_open())
++             tout.close();
 + 
-+     if (result == _ok) {
-+       std::fprintf(stdout, "1.0\n");
-+       std::fprintf(stderr, "OK\n");
-+     } else if (result == _wa) {
-+       std::fprintf(stdout, "0.0\n");
-+       std::fprintf(stderr, "Wrong Answer\n");
-+     } else if (result == _pe) {
-+       std::fprintf(stdout, "0.0\n");
-+       std::fprintf(stderr, "Presentation Error\n");
-+     } else if (result == _dirt) {
-+       std::fprintf(stdout, "0.0\n");
-+       std::fprintf(stderr, "Wrong Output Format\n");
-+     } else if (result == _unexpected_eof) {
-+       std::fprintf(stdout, "0.0\n");
-+       std::fprintf(stderr, "Wrong Output Format\n");
-+     } else if (result == _fail) {
-+       std::fprintf(stdout, "0.0\n");
-+       std::fprintf(stderr, "FAILURE, CONTACT JURY, ERROR 1\n");
-+       halt(1);
-+     } else {
-+       std::fprintf(stdout, "0.0\n");
-+       std::fprintf(stderr, "FAILURE, CONTACT JURY, ERROR 2 %d\n", result);
-+       halt(1);
-+     }
++         if (result == _ok) {
++           std::fprintf(stdout, "1.0\n");
++           std::fprintf(stderr, "OK\n");
++         } else if (result == _wa) {
++           std::fprintf(stdout, "0.0\n");
++           std::fprintf(stderr, "Wrong Answer\n");
++         } else if (result == _pe) {
++           std::fprintf(stdout, "0.0\n");
++           std::fprintf(stderr, "Presentation Error\n");
++         } else if (result == _dirt) {
++           std::fprintf(stdout, "0.0\n");
++           std::fprintf(stderr, "Wrong Output Format\n");
++         } else if (result == _unexpected_eof) {
++           std::fprintf(stdout, "0.0\n");
++           std::fprintf(stderr, "Wrong Output Format\n");
++         } else if (result == _fail) {
++           std::fprintf(stdout, "0.0\n");
++           std::fprintf(stderr, "FAILURE, CONTACT JURY, ERROR 1\n");
++           halt(1);
++         } else {
++           std::fprintf(stdout, "0.0\n");
++           std::fprintf(stderr, "FAILURE, CONTACT JURY, ERROR 2 %d\n", result);
++           halt(1);
++         }
 + 
-+     halt(0);
++         halt(0);
++     #endif
 + 
       switch (result)
       {
@@ -106,7 +109,7 @@
           quit(_fail, std::string("Program must be run with the following arguments: ") +
               "<input-file> <output-file> <answer-file> [<report-file> [<-appes>]]");
   
---- 4072,4089 ----
+--- 4075,4092 ----
           else
           {
               resultName = argv[4];
