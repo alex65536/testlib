@@ -1,5 +1,5 @@
-*** testlib.h.orig	2018-08-22 12:17:52.653467997 +0300
---- testlib.h	2018-08-22 12:17:21.549504348 +0300
+*** testlib.h.orig	2018-08-22 12:26:04.104893746 +0300
+--- testlib.h	2018-08-22 12:27:59.172759328 +0300
 ***************
 *** 36,51 ****
 --- 36,67 ----
@@ -37,7 +37,7 @@
    *     validator.exe < input.txt,
 ***************
 *** 2463,2478 ****
---- 2479,2533 ----
+--- 2479,2536 ----
       {
           if (testlibMode != _interactor && !ouf.seekEof())
               quit(_dirt, "Extra information in the output file");
@@ -65,13 +65,16 @@
 +         } else if (result == _dirt) {
 +             std::fprintf(stdout, "0.0\n");
 +             std::fprintf(stderr, "Wrong Output Format\n");
++         } else if (result == _points) {
++             std::fprintf(stdout, "%f\n", __testlib_points);
++             std::fprintf(stderr, "Partial Score\n");
 +         } else if (result == _unexpected_eof) {
 +             std::fprintf(stdout, "0.0\n");
 +             std::fprintf(stderr, "Wrong Output Format\n");
 +         } else if (result >= _partially) {
 +             double score = (double)pctype / 200.0;
 +             std::fprintf(stdout, "%.3f\n", score);
-+             std::fprintf(stderr, "Partially Correct\n");
++             std::fprintf(stderr, "Partial Score\n");
 +         } else if (result == _fail) {
 +           std::fprintf(stdout, "0.0\n");
 +           std::fprintf(stderr, "FAILURE, CONTACT JURY, ERROR 1\n");
@@ -95,7 +98,7 @@
           errorName = "wrong answer ";
 ***************
 *** 4076,4093 ****
---- 4131,4153 ----
+--- 4134,4156 ----
           else
           {
               resultName = argv[4];
