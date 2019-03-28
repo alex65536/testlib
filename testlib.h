@@ -4488,6 +4488,8 @@ NORETURN void expectedButFound<long double>(TResult result, long double expected
     __testlib_expectedButFound(result, double(expected), double(found), prepend.c_str());
 }
 
+#endif
+
 #if __cplusplus > 199711L || defined(_MSC_VER)
 template <typename T>
 struct is_iterable
@@ -4677,5 +4679,3 @@ void println(const A& a, const B& b, const C& c, const D& d, const E& e, const F
     std::cout << std::endl;
 }
 #endif
-
-#endif // _TESTLIB_H_
